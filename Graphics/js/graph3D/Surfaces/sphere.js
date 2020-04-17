@@ -35,7 +35,7 @@ Surfaces.prototype.sphere = (x = 0, y = 0, z = 0, r = 10) => {
     } 
     edges.push(new Edge(pointNumber * 3 - 1, pointNumber * 2));
     
-    angle = 0;
+    /*angle = 0;
     for (let i = 0; i < pointNumber; i++) {
         points.push(new Point(r * Math.cos(angle) + x, r * Math.cos(angle) + y, r * Math.sin(angle) + z));
         angle += deltaAngle;
@@ -45,7 +45,7 @@ Surfaces.prototype.sphere = (x = 0, y = 0, z = 0, r = 10) => {
     } 
     edges.push(new Edge(pointNumber * 4 - 1, pointNumber * 3));
 
-    /*angle = 0;
+    angle = 0;
     for (let i = 0; i < pointNumber; i++) {
         points.push(new Point(r * Math.cos(angle) + x, r * Math.sin(angle) + y, r * Math.sin(angle) + z));
         angle += deltaAngle;
