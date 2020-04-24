@@ -1,59 +1,47 @@
-Surfaces.prototype.sphere = (x = 0, y = 0, z = 0, r = 10) => {
-    const pointNumber = 100;
-    const deltaAngle = 2 * Math.PI / pointNumber;
-    let angle;
+Surfaces.prototype.sphere = (pointCount = 10, ringCount = 10, x = 0, y = 0, z = 0, R = 10) => {
+    let x0 = x;
+    let y0 = y;
+    let z0 = z;
     const points = [];
     const edges = [];
+    const polygons = [];
 
-    angle = 0;
-    for (let i = 0; i < pointNumber; i++) {
-        points.push(new Point(r * Math.cos(angle) + x, r * Math.sin(angle) + y, z));
-        angle += deltaAngle;
+    // points
+    for (let beta = Math.PI / 2; beta >= -Math.PI / 2; beta -= Math.PI / ringCount) {
+        let r = Math.cos(beta) * R;
+        let height = Math.sin(beta) * R;
+        for (let alpha = 0; alpha < Math.PI * 2; alpha += Math.PI / pointCount * 2) {
+            let x = Math.cos(alpha) * r + x0;
+            let y = height + y0;
+            let z = Math.sin(alpha) * r + z0;
+            points.push(new Point(x, y, z));
+        }
     }
-    for (let i = 0; i < pointNumber - 1; i++) {
-        edges.push(new Edge(i, i + 1));
-    } 
-    edges.push(new Edge(pointNumber - 1, 0));
-    
-    angle = 0;
-    for (let i = 0; i < pointNumber; i++) {
-        points.push(new Point(x, r * Math.sin(angle) + y, r * Math.cos(angle) + z));
-        angle += deltaAngle;
-    }
-    for (let i = pointNumber; i < pointNumber * 2 - 1; i++) {
-        edges.push(new Edge(i, i + 1));
-    } 
-    edges.push(new Edge(pointNumber * 2 - 1, pointNumber));
-    
-    angle = 0;
-    for (let i = 0; i < pointNumber; i++) {
-        points.push(new Point(r * Math.cos(angle) + x, y, r * Math.sin(angle) + z));
-        angle += deltaAngle;
-    }
-    for (let i = pointNumber * 2; i < pointNumber * 3 - 1; i++) {
-        edges.push(new Edge(i, i + 1));
-    } 
-    edges.push(new Edge(pointNumber * 3 - 1, pointNumber * 2));
-    
-    /*angle = 0;
-    for (let i = 0; i < pointNumber; i++) {
-        points.push(new Point(r * Math.cos(angle) + x, r * Math.cos(angle) + y, r * Math.sin(angle) + z));
-        angle += deltaAngle;
-    }
-    for (let i = pointNumber * 3; i < pointNumber * 4 - 1; i++) {
-        edges.push(new Edge(i, i + 1));
-    } 
-    edges.push(new Edge(pointNumber * 4 - 1, pointNumber * 3));
 
-    angle = 0;
-    for (let i = 0; i < pointNumber; i++) {
-        points.push(new Point(r * Math.cos(angle) + x, r * Math.sin(angle) + y, r * Math.sin(angle) + z));
-        angle += deltaAngle;
+    // edges
+    for (let i = 0; i < points.length; i++) {
+        if (i % pointCount === 0 && i !== 0) {
+            edges.push(new Edge(i, i + 1));
+        } else {
+            if (i + 1 < points.length && (i + 1) % pointCount !== 0) {
+                edges.push(new Edge(i, i + 1));
+            } else {
+                edges.push(new Edge(i, i + 1 - pointCount));
+            }
+        }
+        if (i + pointCount < points.length) {
+            edges.push(new Edge(i, i + pointCount));
+        }
     }
-    for (let i = pointNumber * 4; i < pointNumber * 5 - 1; i++) {
-        edges.push(new Edge(i, i + 1));
-    } 
-    edges.push(new Edge(pointNumber * 5 - 1, pointNumber * 4));*/
+
+    // polygons
+    for (let i = 0; i < points.length; i++) {
+        if ((i + 1 + pointCount) < points.length && ((i + 1) % pointCount) != 0) {
+            polygons.push(new Polygon([i, i + 1, i + 1 + pointCount, i + pointCount]));
+        } else if ((i + pointCount) < points.length && ((i + 1) % pointCount) == 0) {
+            polygons.push(new Polygon([i, i - pointCount + 1, i + 1, i + pointCount]));
+        }
+    }
     
-    return new Subject(points, edges);
+    return new Subject(points, edges, polygons);
 }

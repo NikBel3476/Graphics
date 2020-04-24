@@ -7,20 +7,28 @@
     <script src='js/graph3D/entities/Edge.js'></script>
     <script src='js/graph3D/entities/Polygon.js'></script>
     <script src='js/graph3D/entities/Subject.js'></script>
+    <script src="js/graph3D/entities/Light.js"></script>
 
     <script src='js/graph3D/Surfaces/Surfaces.js'></script>
     <script src='js/graph3D/Surfaces/cube.js'></script>
     <script src='js/graph3D/Surfaces/bublik.js'></script>
     <script src='js/graph3D/Surfaces/sphere.js'></script>
+    <script src='js/graph3D/Surfaces/paraboloid.js'></script>
     
     <script src='js/graph3D/Math3D.js'></script>
     <script src='js/graph3D/Graph3D.js'></script>
     <script src='js/graph/Canvas.js'></script>
+    <script src="js/UI/UI.js"></script>
     <script src='js/main.js'></script>
 </head>
 <body>
+    <div>
+        <canvas id='canvas'></canvas>
+    </div>
+    <div>
         <label><input type='checkbox' id='pointsCheckbox' checked> Рисовать точки</label>
         <label><input type='checkbox' id='edgesCheckbox' checked> Рисовать ребра</label>
         <label><input type='checkbox' id='polygonsCheckbox' checked> Рисовать полигоны</label>
+    </div>
 </body>
 </html>

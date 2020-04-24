@@ -22,41 +22,19 @@ window.onload = function () {
     const ZOOM_IN = 0.9;
 
     const sur = new Surfaces;
-    const canvas = new Canvas({ width: 600, height: 600, WINDOW, callbacks: { wheel, mousemove, mouseup, mousedown}});
+    const canvas = new Canvas({id: 'canvas', width: 600, height: 600, WINDOW, callbacks: { wheel, mousemove, mouseup, mousedown}});
     const graph3D = new Graph3D({ WINDOW });
+    const ui = new UI({ callbacks: {move, printPoints, printEdges, printPolygons}});
 
-    const SCENE = [sur.cube()]; // сцена
+    const SCENE = [sur.paraboloid()]; // сцена
+    const LIGHT = new Light(-10, 2, -10, 100); // источник света
 
     let canRotate;
-    // переменные для чекбоксов
-    let canDrawPoints = true;
-    let canDrawEdges = true;
-    let canDrawPolygons = true;
-
-    //about input
-    document.getElementById('pointsCheckbox').addEventListener('click', function () {
-        if (document.getElementById('pointsCheckbox').checked) {
-            canDrawPoints = true;
-        } else {
-            canDrawPoints = false;
-        }
-    })
-
-    document.getElementById('edgesCheckbox').addEventListener('click', function () {
-        if (document.getElementById('edgesCheckbox').checked) {
-            canDrawEdges = true;
-        } else {
-            canDrawEdges = false;
-        }
-    })
-
-    document.getElementById('polygonsCheckbox').addEventListener('click', function () {
-        if (document.getElementById('polygonsCheckbox').checked) {
-            canDrawPolygons = true;
-        } else {
-            canDrawPolygons = false;
-        }
-    })
+    let canPrint = {
+        points: true,
+        edges: true,
+        polygons: true
+    };
 
     // about callbacks
     function wheel(event) {
@@ -85,10 +63,25 @@ window.onload = function () {
         }
     }
 
+    function move(event) {
+
+    }
+
     function moveUp(event) {
 
     }
 
+    // inputs
+    function printPoints(value) {
+        canPrint.points = value;
+    }
+    function printEdges(value) {
+        canPrint.edges = value;
+    }
+    function printPolygons(value) {
+        canPrint.polygons = value;
+    }
+    
     // about render
     function clear() {
         canvas.clear();
@@ -96,7 +89,7 @@ window.onload = function () {
 
     function printSubject(subject) {
         // print edges
-        if (canDrawEdges) {
+        if (canPrint.edges) {
             for (let i = 0; i < subject.edges.length; i++) {
                 const edges = subject.edges[i];
                 const point1 = subject.points[edges.p1];
@@ -105,36 +98,47 @@ window.onload = function () {
             }
         }
         // print points
-        if (canDrawPoints) {
+        if (canPrint.points) {
             for (let i = 0; i < subject.points.length; i++) {
                 const points = subject.points[i];
                 canvas.point(graph3D.xs(points), graph3D.ys(points));
             }
         }
         // print polygons
-        if (canDrawPolygons) {
-            graph3D.calcDistance(subject, WINDOW.CAMERA);
+        if (canPrint.polygons) {
+
+            graph3D.calcGorner(subject, WINDOW.CAMERA);
+
+            graph3D.calcDistance(subject, WINDOW.CAMERA, 'distance');
+            graph3D.calcDistance(subject, LIGHT, 'lumen');
             
             subject.polygons.sort((a, b) => b.distance - a.distance);
             for (let i = 0; i < subject.polygons.length; i++) {
-                const polygon = subject.polygons[i];
-                const point1 = {
-                    x: graph3D.xs(subject.points[polygon.points[0]]),
-                    y: graph3D.ys(subject.points[polygon.points[0]])
-                };
-                const point2 = {
-                    x: graph3D.xs(subject.points[polygon.points[1]]),
-                    y: graph3D.ys(subject.points[polygon.points[1]])
-                };
-                const point3 = {
-                    x: graph3D.xs(subject.points[polygon.points[2]]),
-                    y: graph3D.ys(subject.points[polygon.points[2]])
-                };
-                const point4 = {
-                    x: graph3D.xs(subject.points[polygon.points[3]]),
-                    y: graph3D.ys(subject.points[polygon.points[3]])
-                };
-                canvas.polygon([point1, point2, point3, point4], polygon.color);
+                if (subject.polygons[i].visible) {
+                    const polygon = subject.polygons[i];
+                    const point1 = {
+                        x: graph3D.xs(subject.points[polygon.points[0]]),
+                        y: graph3D.ys(subject.points[polygon.points[0]])
+                    };
+                    const point2 = {
+                        x: graph3D.xs(subject.points[polygon.points[1]]),
+                        y: graph3D.ys(subject.points[polygon.points[1]])
+                    };
+                    const point3 = {
+                        x: graph3D.xs(subject.points[polygon.points[2]]),
+                        y: graph3D.ys(subject.points[polygon.points[2]])
+                    };
+                    const point4 = {
+                        x: graph3D.xs(subject.points[polygon.points[3]]),
+                        y: graph3D.ys(subject.points[polygon.points[3]])
+                    };
+                    let {r, g, b} = polygon.color;
+                    const lumen = graph3D.calcIllumination(polygon.lumen, LIGHT.lumen);
+                    r = Math.round(r * lumen);
+                    g = Math.round(g * lumen);
+                    b = Math.round(b * lumen);
+                    canvas.polygon([point1, point2, point3, point4], polygon.rgbToHex(r, g, b));
+                }
             }
         }
     }
