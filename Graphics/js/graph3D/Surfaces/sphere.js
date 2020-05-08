@@ -1,13 +1,13 @@
-Surfaces.prototype.sphere = (pointCount = 10, ringCount = 10, x = 0, y = 0, z = 0, R = 10) => {
-    let x0 = x;
-    let y0 = y;
-    let z0 = z;
+Surfaces.prototype.sphere = (pointCount = 10, ringCount = 10, R = 10, point = new Point(0, 0 ,0), color = '#FF0000', animation) => {
+    let x0 = point.x;
+    let y0 = point.y;
+    let z0 = point.z;
     const points = [];
     const edges = [];
     const polygons = [];
 
     // points
-    for (let beta = Math.PI / 2; beta >= -Math.PI / 2; beta -= Math.PI / ringCount) {
+    for (let beta = Math.PI / 2; beta >= -Math.PI; beta -= Math.PI / ringCount) {
         let r = Math.cos(beta) * R;
         let height = Math.sin(beta) * R;
         for (let alpha = 0; alpha < Math.PI * 2; alpha += Math.PI / pointCount * 2) {
@@ -37,11 +37,17 @@ Surfaces.prototype.sphere = (pointCount = 10, ringCount = 10, x = 0, y = 0, z = 
     // polygons
     for (let i = 0; i < points.length; i++) {
         if ((i + 1 + pointCount) < points.length && ((i + 1) % pointCount) != 0) {
-            polygons.push(new Polygon([i, i + 1, i + 1 + pointCount, i + pointCount]));
+            polygons.push(new Polygon([i, i + 1, i + 1 + pointCount, i + pointCount], color));
         } else if ((i + pointCount) < points.length && ((i + 1) % pointCount) == 0) {
-            polygons.push(new Polygon([i, i - pointCount + 1, i + 1, i + pointCount]));
+            polygons.push(new Polygon([i, i - pointCount + 1, i + 1, i + pointCount], color));
         }
     }
     
-    return new Subject(points, edges, polygons);
+    const center = {
+        x: (points[0].x + points[points.length - 1].x) / 2,
+        y: (points[0].y + points[points.length - 1].y) / 2,
+        z: (points[0].z + points[points.length - 1].z) / 2
+    }
+
+    return new Subject(points, edges, polygons, animation, center);
 }
