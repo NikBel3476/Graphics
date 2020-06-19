@@ -1,37 +1,34 @@
 class Math3D {
     constructor() {
-        // матрица сдвига
-        this.moveMatrix = [[ 1,  0,  0, 0],
-                           [ 0,  1,  0, 0],
-                           [ 0,  0,  1, 0],
-                           [ 1,  1,  1, 1]];
-        // матрица масштабирования
-        this.zoomMatrix = [[ 1, 0,  0, 0],
-                           [ 0, 1,  0, 0],
-                           [ 0, 0,  1, 0],
-                           [ 0, 0,  0, 1]];
-        // матрица поворота вокруг оси Ох
-        this.rotateOxMatrix = [[ 1,  0,  0, 0],
-                               [ 0,  1,  1, 0],
-                               [ 0,  1,  1, 0],
-                               [ 0,  0,  0, 1]];
-        // матрица поворота вокруг оси Оy
-        this.rotateOyMatrix = [[ 1,  0,  1, 0],
-                               [ 0,  1,  0, 0],
-                               [ 1,  0,  1, 0],
-                               [ 0,  0,  0, 1]];
-        // матрица поворота вокруг оси Оz
-        this.rotateOzMatrix = [[ 1,  1,  0, 0],
-                               [ 1,  1,  0, 0],
-                               [ 0,  0,  1, 0],
-                               [ 0,  0,  0, 1]];
+        this.matrix = {
+            transform: [[1, 0, 0, 0],
+                        [0, 1, 0, 0],
+                        [0, 0, 1, 0],
+                        [0, 0, 0, 1]]
+        }
+    
+        // уравнение плоскости в удобном виде
+        this.plane = {
+            // нормальный вектор
+            A: 0,
+            B: 0,
+            C: 0,
+            // точка плоскости (смещение)
+            x0: 0,
+            y0: 0,
+            z0: 0,
+            // точка камеры
+            xs0: 0,
+            ys0: 0,
+            zs0: 0
+        }
     }
 
     calcVector(a, b) {
         return {
             x: b.x - a.x,
             y: b.y - a.y,
-            z: b.z - a.z,
+            z: b.z - a.z
         }
     }
 
@@ -43,12 +40,53 @@ class Math3D {
         }
     }
 
+    // расчет уравнения плоскости и запись его в структуру
+    // point1 - камера 
+    // point2 - центр экрана
+    calcPlaneEquation(point1, point2) {
+        const vector = this.calcVector(point1, point2);
+        // координаты плоскости
+        this.plane.A = vector.x;
+        this.plane.B = vector.y;
+        this.plane.C = vector.z;
+        this.plane.x0 = point2.x;
+        this.plane.y0 = point2.y;
+        this.plane.z0 = point2.z;
+        // дописать камеру
+        this.plane.xs0 = point1.x;
+        this.plane.ys0 = point1.y;
+        this.plane.zs0 = point1.z;
+    }
+
+    // получить проекцию точки на плоскость экрана относительно камеры
+    getProection(point) {
+        const {A, B, C, x0, y0, z0, xs0, ys0, zs0} = this.plane;
+        const m = point.x - xs0;
+        const n = point.y - ys0;
+        const p = point.z - zs0;
+        const t = (A*(x0 - xs0) + B*(y0 - ys0) + C*(z0 - zs0)) / (A*m + B*n + C*p);
+        const ps = {
+            x: x0 + m * t,
+            y: y0 + n * t,
+            z: z0 + p * t
+        }
+        return {
+            x: ps.x, //- A,
+            y: ps.y, //- B,
+            z: ps.z //- C
+        }
+    }
+
     scalProd(a, b) {
         return a.x*b.x + a.y*b.y + a.z*b.z;
     }
 
     calcGorner(a, b) {
-        return this.scalProd(a, b) / (Math.sqrt(this.scalProd(a, a) + this.scalProd(b, b)));
+        return this.scalProd(a, b) / (Math.sqrt(this.scalProd(a, a) * this.scalProd(b, b)));
+    }
+
+    calcVectorModule(a) {
+        return Math.sqrt(Math.pow(a.x, 2) + Math.pow(a.y, 2) + Math.pow(a.z, 2));
     }
 
     // перемножение матрицы преобразования на точку
@@ -56,11 +94,11 @@ class Math3D {
     // T = [[],[],[],[]] по 4 элемента
     multMatrix(T, m) {
         const c = [0, 0, 0, 0];
-        const rows = T.length;
-        const colomns = m.length;
-        for (let i = 0; i < rows; i++) {
+        //const rows = T.length;
+        //const colomns = m.length;
+        for (let i = 0; i < 4 /*rows*/; i++) {
             let S = 0;
-            for (let j = 0; j < colomns; j++) {        
+            for (let j = 0; j < 4 /*colomns*/; j++) {        
                 S += T[j][i] * m[j];   
             }
             c[i] = S;
@@ -68,66 +106,70 @@ class Math3D {
         return c;
     }
 
-    zoom(delta, point) {
-        const array = this.multMatrix(
-            [[delta,  0,  0, 0],
-             [ 0, delta,  0, 0],
-             [ 0,  0, delta, 0],
-             [ 0,  0,     0, 1]],
-            [point.x, point.y, point.z, 1]
-        );
-        point.x = array[0];
-        point.y = array[1];
-        point.z = array[2];
+    multMatrixes(A, B) {
+        const C = [[0, 0, 0, 0], 
+                   [0, 0, 0, 0], 
+                   [0, 0, 0, 0], 
+                   [0, 0, 0, 0]];
+        for (let i = 0; i < 4; i++) {
+            for (let j = 0; j < 4; j++) {
+                let s = 0;
+                for (let k = 0; k < 4; k++) {
+                    s += A[i][k] * B[k][j];
+                }
+                C[i][j] = s;
+            }
+        }
+        return C;
     }
 
-    move(sx, sy, sz, point) {
-        var array = this.multMatrix(
-            [[ 1,  0,  0, 0],
-             [ 0,  1,  0, 0],
-             [ 0,  0,  1, 0],
-             [sx, sy, sz, 1]], 
-            [point.x, point.y, point.z, 1]
-        );
-        point.x = array[0];
-        point.y = array[1];
-        point.z = array[2];
+    zoomMatrix(delta) {
+        return [[delta,  0,  0, 0],
+                [ 0, delta,  0, 0],
+                [ 0,  0, delta, 0],
+                [ 0,  0,     0, 1]];
     }
 
-    rotateOx(alpha, point) {
-        var array = this.multMatrix(
-            [[1, 0, 0, 0],
-             [0,  Math.cos(alpha), Math.sin(alpha), 0],
-             [0, -Math.sin(alpha), Math.cos(alpha), 0],
-             [0, 0, 0, 1]], 
-            [point.x, point.y, point.z, 1]
-        );
-        point.x = array[0];
-        point.y = array[1];
-        point.z = array[2];
+    moveMatrix(sx, sy, sz) {
+        return [[ 1,  0,  0, 0],
+                [ 0,  1,  0, 0],
+                [ 0,  0,  1, 0],
+                [sx, sy, sz, 1]];
     }
 
-    rotateOy(alpha, point) {
-        var array = this.multMatrix(
-            [[Math.cos(alpha), 0, -Math.sin(alpha), 0],
-             [0, 1, 0, 0],
-             [Math.sin(alpha), 0, Math.cos(alpha), 0],
-             [0, 0, 0, 1]], 
-            [point.x, point.y, point.z, 1]
-        );
-        point.x = array[0];
-        point.y = array[1];
-        point.z = array[2];
+    rotateOxMatrix(alpha) {
+        return [[1, 0, 0, 0],
+                [0,  Math.cos(alpha), Math.sin(alpha), 0],
+                [0, -Math.sin(alpha), Math.cos(alpha), 0],
+                [0, 0, 0, 1]];
     }
-    
-    rotateOz(alpha, point) {
-        var array = this.multMatrix(
-            [[ Math.cos(alpha), Math.sin(alpha), 0, 0],
-             [-Math.sin(alpha), Math.cos(alpha), 0, 0],
-             [0, 0, 1, 0],
-             [0, 0, 0, 1]], 
-            [point.x, point.y, point.z, 1]
-        );
+
+    rotateOyMatrix(alpha) {
+        return [[Math.cos(alpha), 0, -Math.sin(alpha), 0],
+                [0, 1, 0, 0],
+                [Math.sin(alpha), 0, Math.cos(alpha), 0],
+                [0, 0, 0, 1]];
+}
+
+    rotateOzMatrix(alpha) {
+        return [[ Math.cos(alpha), Math.sin(alpha), 0, 0],
+                [-Math.sin(alpha), Math.cos(alpha), 0, 0],
+                [0, 0, 1, 0],
+                [0, 0, 0, 1]]
+    }
+
+    // заполнить общую матрицу перобразований (на основании массива)
+    transformMatrix(matrixes = []) {
+        this.matrix.transform = [[1, 0, 0, 0],
+                                 [0, 1, 0, 0],
+                                 [0, 0, 1, 0],
+                                 [0, 0, 0, 1]];
+        matrixes.forEach(matrix => {this.matrix.transform = this.multMatrixes(this.matrix.transform, matrix)});
+    }
+
+    // функция преобразований точки относительно матрицы
+    transform(point) {
+        const array = this.multMatrix(this.matrix.transform, [point.x, point.y, point.z, 1]);
         point.x = array[0];
         point.y = array[1];
         point.z = array[2];

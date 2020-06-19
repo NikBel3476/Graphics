@@ -4,6 +4,7 @@ class UI {
         const printPoints = (callbacks.printPoints instanceof Function) ? callbacks.printPoints : function () {};
         const printEdges = (callbacks.printEdges instanceof Function) ? callbacks.printEdges : function () {};
         const printPolygons = (callbacks.printPolygons instanceof Function) ? callbacks.printPolygons : function () {};
+        this.move = (callbacks.move instanceof Function) ? callbacks.move : function () {};
         // events
         document.addEventListener('keydown', event => this.keyDown(event));
         document.getElementById('pointsCheckbox').addEventListener('click', function() { printPoints(this.checked); });
