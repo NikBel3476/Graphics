@@ -196,7 +196,8 @@ window.onload = function () {
             });
             // отрисовка всех полигонов
             polygons.sort((a, b) => b.distance - a.distance); // сортировка полиговнов
-            polygons.forEach(polygon => {canvas.polygon(polygon.points, polygon.color)});
+            let number = 1;
+            polygons.forEach(polygon => {canvas.polygon(polygon.points, polygon.color, number++)});
         }
     }
     

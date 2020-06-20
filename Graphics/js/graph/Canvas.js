@@ -75,7 +75,7 @@ class Canvas {
         this.contextV.fillText(text, this.xs(x), this.ys(y));
     }
 
-    polygon(points, color = '008800BB') {
+    polygon(points, color = '008800BB', number) {
         this.contextV.fillStyle = color;
         this.contextV.fillStroke = color;
         this.contextV.beginPath();
@@ -88,11 +88,7 @@ class Canvas {
         // текст
         this.contextV.fillStyle = '#000000';
         this.contextV.font = '10px Verdana';
-        let i = 1;
-        while (i < points.length) {
-            this.contextV.fillText(`${i}`, this.xsPolygon(points[i].x), this.ysPolygon(points[i].y));
-            i += 4;
-        }
+        this.contextV.fillText(`${number}`, this.xsPolygon(points[0].x), this.ysPolygon(points[0].y));
     }
 
     render() {

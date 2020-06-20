@@ -1,10 +1,11 @@
 class Polygon{
-    constructor(points = [], color = '#FF0000', distance = 0) {
+    constructor(points = [], color = '#FF0000', distance = 0, number) {
         this.points = points;
         this.color = this.hexToRgb(color);
         this.distance = distance;
         this.lumen = 1;
         this.visible = true;
+        this.number = number;
 
         this.center = new Point; // вычисляемый центр полигона
     }
