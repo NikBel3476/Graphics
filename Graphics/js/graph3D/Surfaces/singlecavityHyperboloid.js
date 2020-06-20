@@ -1,4 +1,4 @@
-Surfaces.prototype.singlecavityHyperboloid = (pointCount = 20, ringCount = 10, R = 10) => {
+Surfaces.prototype.singlecavityHyperboloid = (pointCount = 20, ringCount = 10, R = 10, color = '#ff0000') => {
     const points = [];
     const edges = [];
     const polygons = [];
@@ -33,9 +33,9 @@ Surfaces.prototype.singlecavityHyperboloid = (pointCount = 20, ringCount = 10, R
     // polygons
     for (let i = 0; i < points.length; i++) {
         if ((i + 1 + pointCount) < points.length && ((i + 1) % pointCount) != 0) {
-            polygons.push(new Polygon([i, i + 1, i + 1 + pointCount, i + pointCount]));
+            polygons.push(new Polygon([i, i + 1, i + 1 + pointCount, i + pointCount], color));
         } else if ((i + pointCount) < points.length && ((i + 1) % pointCount) == 0) {
-            polygons.push(new Polygon([i, i - pointCount + 1, i + 1, i + pointCount]));
+            polygons.push(new Polygon([i, i - pointCount + 1, i + 1, i + pointCount], color));
         }
     }
     

@@ -30,10 +30,14 @@ window.onload = function () {
     const ui = new UI({ callbacks: {printPoints, printEdges, printPolygons, move}});
     // сцена
     const SCENE = [
-        // для теней
-        sur.sphere(25, 25, 10, new Point(0, 0, 0), '#fff100'),
+        // ЗАЧЕТ
+
+        sur.hyperbolicParaboloid(20, '#ffffff'),
+
+        /*sur.sphere(25, 25, 10, new Point(0, 0, 0), '#fff100'),
         sur.sphere(25, 25, 3, new Point(15, 0, 0), '#05008b', {rotateOz: new Point(0, 0, 0)}, 1),
-        sur.sphere(25, 25, 1, new Point(10, -20, -40), '#000000'), 
+        sur.sphere(25, 25, 1, new Point(10, -20, -40), '#000000'),
+        */ 
         // солнечная система
         /*sur.sphere(10, 10, 3, new Point(0, 0, 0), '#fff100', {rotateOz: new Point(0, 0 ,0)}, 1), //Солнце
         sur.sphere(10, 10, 0.1, new Point(-5, 0, 0), '#a5a154', {rotateOz: new Point(0, 0 ,0)}, 3),  // Меркурий
@@ -230,6 +234,7 @@ window.onload = function () {
         printAllPolygons();
         SCENE.forEach(subject => printSubject(subject));
         canvas.text(-7, 7, FPSout);
+        canvas.text(-10, 10, 'aaa');
         canvas.render();
     }
 

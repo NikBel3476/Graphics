@@ -85,6 +85,14 @@ class Canvas {
         }
         this.contextV.closePath();
         this.contextV.fill();
+        // текст
+        this.contextV.fillStyle = '#000000';
+        this.contextV.font = '10px Verdana';
+        let i = 1;
+        while (i < points.length) {
+            this.contextV.fillText(`${i}`, this.xsPolygon(points[i].x), this.ysPolygon(points[i].y));
+            i += 4;
+        }
     }
 
     render() {

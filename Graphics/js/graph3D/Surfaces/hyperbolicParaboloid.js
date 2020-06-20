@@ -1,4 +1,4 @@
-Surfaces.prototype.hyperbolicParaboloid = (count = 20) => {
+Surfaces.prototype.hyperbolicParaboloid = (count = 20, color = '#ff0000') => {
     const points = [];
     const edges = [];
     const polygons = [];
@@ -26,7 +26,8 @@ Surfaces.prototype.hyperbolicParaboloid = (count = 20) => {
     //  полигоны
     for (let i = 0; i < points.length; i++) {
         if (i + 1 + count < points.length && (i + 1) % count != 0) {
-            polygons.push(new Polygon([i, i + 1, i + 1 + count, i + count]));
+            
+            polygons.push(new Polygon([i, i + 1, i + 1 + count, i + count], color));
         }
     }
     return new Subject(points, edges, polygons);

@@ -1,7 +1,10 @@
-Surfaces.prototype.cone = (pointCount = 20, ringCount = 10, R = 10) => {
+Surfaces.prototype.cone = (pointCount = 20, ringCount = 10, point = new Point(0, 0, 0), color = '#ff0000', R = 10) => {
     const points = [];
     const edges = [];
     const polygons = [];
+    let x0 = point.x;
+    let y0 = point.y;
+    let z0 = point.z;
 
     // points
     for (let beta = Math.PI / 2; beta >= -Math.PI; beta -= Math.PI / ringCount) {
@@ -33,9 +36,9 @@ Surfaces.prototype.cone = (pointCount = 20, ringCount = 10, R = 10) => {
     // polygons
     for (let i = 0; i < points.length; i++) {
         if ((i + 1 + pointCount) < points.length && ((i + 1) % pointCount) != 0) {
-            polygons.push(new Polygon([i, i + 1, i + 1 + pointCount, i + pointCount]));
+            polygons.push(new Polygon([i, i + 1, i + 1 + pointCount, i + pointCount], color));
         } else if ((i + pointCount) < points.length && ((i + 1) % pointCount) == 0) {
-            polygons.push(new Polygon([i, i - pointCount + 1, i + 1, i + pointCount]));
+            polygons.push(new Polygon([i, i - pointCount + 1, i + 1, i + pointCount],color));
         }
     }
     return new Subject(points, edges, polygons);

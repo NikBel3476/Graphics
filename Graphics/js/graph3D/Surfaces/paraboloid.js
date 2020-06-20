@@ -1,4 +1,4 @@
-Surfaces.prototype.paraboloid = (pointCount = 10, length = 20, x0 = 0, y0 = 0, z0 = 0) => {
+Surfaces.prototype.paraboloid = (pointCount = 10, length = 20, color = '#ff0000') => {
     const points = [];
     const edges = [];
     const polygons = [];
@@ -33,7 +33,7 @@ Surfaces.prototype.paraboloid = (pointCount = 10, length = 20, x0 = 0, y0 = 0, z
     k = pointCount;
     for (let i = 0; i < points.length - pointCount - 2; i++) {
         if (i % k != 0 || i == 0) {
-            polygons.push(new Polygon([i, i + 1, i + pointCount + 2, i + pointCount + 1]));
+            polygons.push(new Polygon([i, i + 1, i + pointCount + 2, i + pointCount + 1], color));
         } else {
             k += pointCount + 1;
         }
