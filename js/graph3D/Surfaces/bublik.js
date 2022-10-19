@@ -1,4 +1,8 @@
-Surfaces.prototype.bublik = (count = 10, R = 10, point = new Point(0, 0, 0), color = '#ff0000', animation, speedCoef = 1) => {
+Surfaces.prototype.bublik = (
+    count = 10,
+    R = 10,
+    point = new Point(0, 0, 0), color = '#ff0000', animation, speedCoef = 1
+) => {
     const x0 = point.x;
     const y0 = point.y;
     const z0 = point.z;
@@ -27,13 +31,13 @@ Surfaces.prototype.bublik = (count = 10, R = 10, point = new Point(0, 0, 0), col
             edges.push(new Edge(i, i + 1));
         }
         edges.push(new Edge(0, count - 1));
-        edges.push(new Edge(count, 2*count - 1));
+        edges.push(new Edge(count, 2 * count - 1));
     }
 
     for (let i = 0; i < count - 1; i++) {
         polygons.push(new Polygon([i, i + 1, i + count + 1, i + count], color));
     }
-    polygons.push(new Polygon([count - 1, 0, count, 2*count - 1], color));
+    polygons.push(new Polygon([count - 1, 0, count, 2 * count - 1], color));
 
     return new Subject(points, edges, polygons, animation, speedCoef);
 }

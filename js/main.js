@@ -36,8 +36,7 @@ window.onload = function () {
 
         /*sur.sphere(25, 25, 10, new Point(0, 0, 0), '#fff100'),
         sur.sphere(25, 25, 3, new Point(15, 0, 0), '#05008b', {rotateOz: new Point(0, 0, 0)}, 1),
-        sur.sphere(25, 25, 1, new Point(10, -20, -40), '#000000'),
-        */ 
+        sur.sphere(25, 25, 1, new Point(10, -20, -40), '#000000'),*/
         // солнечная система
         /*sur.sphere(10, 10, 3, new Point(0, 0, 0), '#fff100', {rotateOz: new Point(0, 0 ,0)}, 1), //Солнце
         sur.sphere(10, 10, 0.1, new Point(-5, 0, 0), '#a5a154', {rotateOz: new Point(0, 0 ,0)}, 3),  // Меркурий
@@ -83,7 +82,7 @@ window.onload = function () {
         canPrint.polygons = value;
     }
 
-    // about callbacks
+    // callbacks
     function wheel(event) {
         /*const delta = (event.wheelDelta > 0) ? ZOOM_IN : ZOOM_OUT;
         graph3D.zoomMatrix(delta);
@@ -97,7 +96,7 @@ window.onload = function () {
                 }
             }
         });*/
-        const delta = (event.wheelDelta > 0) ? ZOOM_IN : ZOOM_OUT;
+        const delta = (event.wheelDelta > 0) ? ZOOM_OUT : ZOOM_IN;
         graph3D.zoomMatrix(delta);
         SCENE.forEach(subject => {
             subject.points.forEach(point => graph3D.transform(point));
@@ -120,8 +119,8 @@ window.onload = function () {
     function mousemove(event) {
         if (canRotate) {
             if (event.movementX) { // вращение вокруг Oy
-                const alpha = canvas.sx(event.movementX) / WINDOW.CAMERA.z / 50;
-                graph3D.rotateOyMatrix(alpha)
+                const alpha = canvas.sx(event.movementX) / WINDOW.CAMERA.z / 20 * Math.sign(event.movementX);
+                graph3D.rotateOxMatrix(alpha)
                 SCENE.forEach(subject => {
                     subject.points.forEach(point => graph3D.transform(point));
                     if (subject.animation) {
@@ -132,8 +131,8 @@ window.onload = function () {
                 });
             }
             if (event.movementY) { // вращение вокруг Ox
-                const alpha = canvas.sy(event.movementY) / -WINDOW.CAMERA.z / 50;                
-                graph3D.rotateOxMatrix(alpha);
+                const alpha = canvas.sy(event.movementY) / -WINDOW.CAMERA.z / 20 * Math.sign(event.movementY);
+                graph3D.rotateOyMatrix(alpha);
                 SCENE.forEach(subject => {
                     subject.points.forEach(point => graph3D.transform(point));
                     if (subject.animation) {
