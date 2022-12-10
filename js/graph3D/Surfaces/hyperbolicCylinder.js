@@ -1,3 +1,9 @@
+import {Surfaces} from "./Surfaces";
+import {Point} from "../entities/Point";
+import {Edge} from "../entities/Edge";
+import {Polygon} from "../entities/Polygon";
+import {Subject} from "../entities/Subject";
+
 Surfaces.prototype.hyperbolicCylinder = (count = 20, color = '#ff0000') => {
     const points = [];
     const edges = [];

@@ -1,3 +1,8 @@
+import {Surfaces} from "./Surfaces";
+import {Point} from "../entities/Point";
+import {Edge} from "../entities/Edge";
+import {Polygon} from "../entities/Polygon";
+
 Surfaces.prototype.doublecavityHyperboloid = (count = 20, point = new Point(0, 0, 0), color = 'ff0000') => {
     const points = [];
     const edges = [];

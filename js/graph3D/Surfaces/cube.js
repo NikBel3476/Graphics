@@ -1,3 +1,8 @@
+import {Surfaces} from "./Surfaces";
+import {Point} from "../entities/Point";
+import {Polygon} from "../entities/Polygon";
+import {Subject} from "../entities/Subject";
+
 Surfaces.prototype.cube = (x = 0, y = 0, z = 0, size = 10, color = '#ff0000') => {
     return new Subject([
         new Point(x - size, y - size, z - size),

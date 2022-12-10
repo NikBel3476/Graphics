@@ -1,4 +1,6 @@
-class Graph3D {
+import {Math3D} from "./Math3D";
+
+export class Graph3D {
     constructor({ WINDOW }) {
         this.WINDOW = WINDOW;
         this.math = new Math3D();

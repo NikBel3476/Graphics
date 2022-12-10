@@ -1,4 +1,4 @@
-class Canvas {
+export class Canvas {
     constructor({ id, width = 300, height = 300, WINDOW = { LEFT: -5, BOTTOM: -5, WIDTH: 20, HEIGHT: 20 }, callbacks = {}} = {}) {
         if (id) {
             this.canvas = document.getElementById(id);

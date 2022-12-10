@@ -1,3 +1,7 @@
+import {Surfaces} from "./Surfaces";
+import {Point} from "../entities/Point";
+import {Polygon} from "../entities/Polygon";
+
 Surfaces.prototype.cone = (pointCount = 20, ringCount = 10, point = new Point(0, 0, 0), color = '#ff0000', R = 10) => {
     const points = [];
     const edges = [];

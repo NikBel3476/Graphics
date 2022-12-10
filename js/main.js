@@ -1,3 +1,10 @@
+import {UI} from "./UI/UI";
+import {Canvas} from "./graph/Canvas";
+import {Point} from "./graph3D/entities/Point";
+import {Surfaces} from "./graph3D/Surfaces/Surfaces";
+import {Graph3D} from "./graph3D/Graph3D";
+import {Light} from "./graph3D/entities/Light";
+
 window.requestAnimFrame = (function () {
     return window.requestAnimationFrame      ||
            window.webkitCancelAnimationFrame ||

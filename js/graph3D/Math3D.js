@@ -1,4 +1,4 @@
-class Math3D {
+export class Math3D {
     constructor() {
         this.matrix = {
             transform: [[1, 0, 0, 0],
