@@ -4,10 +4,17 @@ import {Edge} from "../entities/Edge";
 import {Polygon} from "../entities/Polygon";
 import {Subject} from "../entities/Subject";
 
-Surface.prototype.ellipsoid = (pointCount = 20, ringCount = 10, R = 10, color = '#ff0000', a = 0.7, b = 1) => {
-    const points = [];
-    const edges = [];
-    const polygons = [];
+Surface.prototype.ellipsoid = (
+    pointCount = 20,
+    ringCount = 10,
+    R = 10,
+    color = '#ff0000',
+    a = 0.7,
+    b = 1
+) => {
+    const points: Point[] = [];
+    const edges: Edge[] = [];
+    const polygons: Polygon[] = [];
 
     // points
     for (let beta = Math.PI / 2; beta >= -Math.PI; beta -= Math.PI / ringCount) {

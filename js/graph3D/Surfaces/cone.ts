@@ -4,13 +4,16 @@ import {Polygon} from "../entities/Polygon";
 import {Subject} from "../entities/Subject";
 import {Edge} from "../entities/Edge";
 
-Surface.prototype.cone = (pointCount = 20, ringCount = 10, point = new Point(0, 0, 0), color = '#ff0000', R = 10) => {
-    const points = [];
-    const edges = [];
-    const polygons = [];
-    let x0 = point.x;
-    let y0 = point.y;
-    let z0 = point.z;
+Surface.prototype.cone = (
+    pointCount = 20,
+    ringCount = 10,
+    point = new Point(0, 0, 0),
+    color = '#ff0000',
+    R = 10
+) => {
+    const points: Point[] = [];
+    const edges: Edge[] = [];
+    const polygons: Polygon[] = [];
 
     // points
     for (let beta = Math.PI / 2; beta >= -Math.PI; beta -= Math.PI / ringCount) {
@@ -47,5 +50,6 @@ Surface.prototype.cone = (pointCount = 20, ringCount = 10, point = new Point(0, 
             polygons.push(new Polygon([i, i - pointCount + 1, i + 1, i + pointCount],color));
         }
     }
+
     return new Subject(points, edges, polygons);
 }

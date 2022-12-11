@@ -5,9 +5,9 @@ import {Polygon} from "../entities/Polygon";
 import {Subject} from "../entities/Subject";
 
 Surface.prototype.parabolicCylinder = (count = 20, color = '#ff0000') => {
-    const points = [];
-    const edges = [];
-    const polygons = [];
+    const points: Point[] = [];
+    const edges: Edge[] = [];
+    const polygons: Polygon[] = [];
 
     // точки
     const size = 10;

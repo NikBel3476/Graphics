@@ -58,7 +58,7 @@ export class Surface {
         R: number,
         point: Point,
         color: string,
-        animation: { [key: string]: Point } | null,
+        animation: { [key: string]: Point } | null = null,
         speedCoef?: number
     ): Subject {
         return this.sphere(pointCount, ringCount, R, point, color, animation, speedCoef);

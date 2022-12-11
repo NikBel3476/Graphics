@@ -40,7 +40,6 @@ window.onload = () => {
     const SCENE: Array<Subject> = [
         // ЗАЧЕТ
 
-        sur.circle(80, 10, new Point(0, 0, 0), '#ff0000', '', 1),
         // sur.hyperbolicParaboloid(20, '#ffffff'),
 
         /*sur.sphere(25, 25, 10, new Point(0, 0, 0), '#fff100'),
@@ -59,17 +58,19 @@ window.onload = () => {
         sur.sphere(10, 10, 1.1, new Point(-35, 0, 0), '#0081c6', {rotateOz: new Point(0, 0 ,0)}, 0.2), // Уран
         sur.sphere(10, 10, 1.1, new Point(-40, 0, 0), '#004e77', {rotateOz: new Point(0, 0 ,0)}, 0.1),  // Нептун*/
         // фигуры
-        //sur.cone(20, 20, 5),
-        //sur.cube(0, 0, 5),
-        //sur.doublecavityHyperboloid(20), 
-        //sur.ellipsoid(20 ,20, 10), 
+        // sur.circle(80, 10, new Point(0, 0, 0), '#ff0000', '', 1),
+        // sur.cone(20, 20, 5),
+        // sur.cube(0, 0, 5),
+        // sur.doublecavityHyperboloid(20),
+        // sur.ellipsoid(20 ,20, 10),
         //sur.ellipticCylinder(20, 20, 10), 
         //sur.ellipticParaboloid(20),
         //sur.hyperbolicCylinder(20),
         //sur.hyperbolicParaboloid(20),
         //sur.parabolicCylinder(20), 
-        //sur.paraboloid(10, 20),
+        // sur.paraboloid(10, 20),
         //sur.singlecavityHyperboloid(20, 10, 10),
+        sur.sphere(25, 25, 10, new Point(0, 0, 0), '#fff100'),
     ];
     const LIGHT = new Light(10, -20, -40, 10000); // источник света
 

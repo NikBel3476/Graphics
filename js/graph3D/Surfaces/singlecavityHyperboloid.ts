@@ -4,10 +4,15 @@ import {Edge} from "../entities/Edge";
 import {Polygon} from "../entities/Polygon";
 import {Subject} from "../entities/Subject";
 
-Surface.prototype.singlecavityHyperboloid = (pointCount = 20, ringCount = 10, R = 10, color = '#ff0000') => {
-    const points = [];
-    const edges = [];
-    const polygons = [];
+Surface.prototype.singlecavityHyperboloid = (
+    pointCount = 20,
+    ringCount = 10,
+    R = 10,
+    color = '#ff0000'
+) => {
+    const points: Point[] = [];
+    const edges: Edge[] = [];
+    const polygons: Polygon[] = [];
 
     // points
     for (let beta = Math.PI / 2; beta >= -Math.PI / 2; beta -= Math.PI / ringCount) {

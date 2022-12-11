@@ -4,13 +4,21 @@ import {Edge} from "../entities/Edge";
 import {Polygon} from "../entities/Polygon";
 import {Subject} from "../entities/Subject";
 
-Surface.prototype.sphere = (pointCount = 10, ringCount = 10, R = 10, point = new Point(0, 0 ,0), color = '#FF0000', animation, speedCoef = 1) => {
+Surface.prototype.sphere = (
+    pointCount = 10,
+    ringCount = 10,
+    R = 10,
+    point = new Point(0, 0 ,0),
+    color = '#FF0000',
+    animation: { [key: string]: Point } | null = null,
+    speedCoef = 1
+) => {
     let x0 = point.x;
     let y0 = point.y;
     let z0 = point.z;
-    const points = [];
-    const edges = [];
-    const polygons = [];
+    const points: Point[] = [];
+    const edges: Edge[] = [];
+    const polygons: Polygon[] = [];
 
     // points
     for (let beta = Math.PI / 2; beta >= -Math.PI; beta -= Math.PI / ringCount) {
