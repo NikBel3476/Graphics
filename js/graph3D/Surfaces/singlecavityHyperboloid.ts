@@ -1,26 +1,25 @@
-import {Surfaces} from "./Surfaces";
+import {Surface} from "./Surface";
 import {Point} from "../entities/Point";
 import {Edge} from "../entities/Edge";
 import {Polygon} from "../entities/Polygon";
 import {Subject} from "../entities/Subject";
 
-Surfaces.prototype.ellipsoid = (pointCount = 20, ringCount = 10, R = 10, color = '#ff0000', a = 0.7, b = 1) => {
+Surface.prototype.singlecavityHyperboloid = (pointCount = 20, ringCount = 10, R = 10, color = '#ff0000') => {
     const points = [];
     const edges = [];
     const polygons = [];
 
     // points
-    for (let beta = Math.PI / 2; beta >= -Math.PI; beta -= Math.PI / ringCount) {
-        let r = Math.cos(beta) * R;
+    for (let beta = Math.PI / 2; beta >= -Math.PI / 2; beta -= Math.PI / ringCount) {
+        let r = (1.5 - Math.cos(beta)) * R;
         let height = Math.sin(beta) * R;
         for (let alpha = 0; alpha < Math.PI * 2; alpha += Math.PI / pointCount * 2) {
-            let x = Math.cos(alpha) * r / (a * a);
+            let x = Math.cos(alpha) * r;
             let y = height;
-            let z = Math.sin(alpha) * r / (b * b);
+            let z = Math.sin(alpha) * r;
             points.push(new Point(x, y, z));
         }
     }
-
     // edges
     for (let i = 0; i < points.length; i++) {
         if (i % pointCount === 0 && i !== 0) {

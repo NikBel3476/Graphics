@@ -1,10 +1,10 @@
-import {Surfaces} from "./Surfaces";
+import {Surface} from "./Surface";
 import {Point} from "../entities/Point";
 import {Edge} from "../entities/Edge";
 import {Polygon} from "../entities/Polygon";
 import {Subject} from "../entities/Subject";
 
-Surfaces.prototype.hyperbolicParaboloid = (count = 20, color = '#ff0000') => {
+Surface.prototype.parabolicCylinder = (count = 20, color = '#ff0000') => {
     const points = [];
     const edges = [];
     const polygons = [];
@@ -13,14 +13,15 @@ Surfaces.prototype.hyperbolicParaboloid = (count = 20, color = '#ff0000') => {
     const size = 10;
     const delta = size / count;
     for (let i = 0; i < count; i++) {
+        const y = i * delta - size / 2;
         for (let j = 0; j < count; j++) {
-            const x = i * delta - size / 2;
-            const y = j * delta - size / 2;
-            const z = x * x / 2 - y * y / 2;
+            const x = j * delta - size / 2;
+            const z = x * x;
             points.push(new Point(x, y, z));
         }
     }
     // ребра
+    
     for (let i = 0; i < points.length; i++) {
         if (i + 1 < points.length && (i + 1) % count != 0) {
             edges.push(new Edge(i, i + 1));
@@ -32,7 +33,6 @@ Surfaces.prototype.hyperbolicParaboloid = (count = 20, color = '#ff0000') => {
     //  полигоны
     for (let i = 0; i < points.length; i++) {
         if (i + 1 + count < points.length && (i + 1) % count != 0) {
-            
             polygons.push(new Polygon([i, i + 1, i + 1 + count, i + count], color));
         }
     }

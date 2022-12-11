@@ -1,9 +1,10 @@
 import {UI} from "./UI/UI";
 import {Canvas} from "./graph/Canvas";
 import {Point} from "./graph3D/entities/Point";
-import {Surfaces} from "./graph3D/Surfaces/Surfaces";
+import {Surface} from "./graph3D/Surfaces/Surface";
 import {Graph3D} from "./graph3D/Graph3D";
 import {Light} from "./graph3D/entities/Light";
+import {Subject} from "./graph3D/entities/Subject";
 
 window.requestAnimFrame = (function () {
     return window.requestAnimationFrame      ||
@@ -16,7 +17,7 @@ window.requestAnimFrame = (function () {
            };
 })();
 
-window.onload = function () {
+window.onload = () => {
     const WINDOW = {
         LEFT: -10,
         BOTTOM: -10,
@@ -31,12 +32,12 @@ window.onload = function () {
     const ZOOM_OUT = 1.1;
     const ZOOM_IN = 0.9;
 
-    const sur = new Surfaces();
+    const sur = new Surface();
     const canvas = new Canvas({id: 'canvas', width: 800, height: 800, WINDOW, callbacks: { wheel, mousemove, mouseup, mousedown}});
     const graph3D = new Graph3D({ WINDOW });
     const ui = new UI({ callbacks: {printPoints, printEdges, printPolygons, move}});
     // сцена
-    const SCENE = [
+    const SCENE: Array<Subject> = [
         // ЗАЧЕТ
 
         sur.hyperbolicParaboloid(20, '#ffffff'),
@@ -55,7 +56,7 @@ window.onload = function () {
         sur.bublik(20, 2.5, new Point(-25, 0, 0), '#2d2118', {rotateOz: new Point(0, 0, 0)}, 0.5), // кольцо Юпитера
         sur.sphere(10, 10, 1.2, new Point(-30, 0, 0), '#c6a452', {rotateOz: new Point(0, 0 ,0)}, 0.35),  // Сатурн
         sur.sphere(10, 10, 1.1, new Point(-35, 0, 0), '#0081c6', {rotateOz: new Point(0, 0 ,0)}, 0.2), // Уран
-        sur.sphere(10, 10, 1.1, new Point(-40, 0, 0), '#004e77', {rotateOz: new Point(0, 0 ,0)}, 0.1),  // Нептун */
+        sur.sphere(10, 10, 1.1, new Point(-40, 0, 0), '#004e77', {rotateOz: new Point(0, 0 ,0)}, 0.1),  // Нептун*/
         // фигуры
         //sur.cone(20, 20, 5),
         //sur.cube(0, 0, 5),
@@ -71,7 +72,7 @@ window.onload = function () {
     ];
     const LIGHT = new Light(10, -20, -40, 10000); // источник света
 
-    let canRotate = 0;
+    let canRotate: boolean = false;
     let canPrint = {
         points: false,
         edges: false,
@@ -79,18 +80,18 @@ window.onload = function () {
     };
 
     // inputs
-    function printPoints(value) {
+    function printPoints(value): void {
         canPrint.points = value;
     }
-    function printEdges(value) {
+    function printEdges(value): void {
         canPrint.edges = value;
     }
-    function printPolygons(value) {
+    function printPolygons(value): void {
         canPrint.polygons = value;
     }
 
     // callbacks
-    function wheel(event) {
+    function wheel(event: WheelEvent) {
         /*const delta = (event.wheelDelta > 0) ? ZOOM_IN : ZOOM_OUT;
         graph3D.zoomMatrix(delta);
         SCENE.forEach(subject => {
@@ -103,7 +104,7 @@ window.onload = function () {
                 }
             }
         });*/
-        const delta = (event.wheelDelta > 0) ? ZOOM_OUT : ZOOM_IN;
+        const delta = (event.deltaY < 0) ? ZOOM_OUT : ZOOM_IN;
         graph3D.zoomMatrix(delta);
         SCENE.forEach(subject => {
             subject.points.forEach(point => graph3D.transform(point));
@@ -115,7 +116,7 @@ window.onload = function () {
         });
     }
 
-    function mouseup(){
+    function mouseup() {
         canRotate = false;
     }
 

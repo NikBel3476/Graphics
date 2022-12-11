@@ -1,9 +1,10 @@
-import {Surfaces} from "./Surfaces";
+import {Surface} from "./Surface";
 import {Point} from "../entities/Point";
 import {Edge} from "../entities/Edge";
 import {Polygon} from "../entities/Polygon";
+import {Subject} from "../entities/Subject";
 
-Surfaces.prototype.bublik = (
+Surface.prototype.bublik = (
     count = 10,
     R = 10,
     point = new Point(0, 0, 0), color = '#ff0000', animation, speedCoef = 1

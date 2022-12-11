@@ -1,10 +1,10 @@
-import {Surfaces} from "./Surfaces";
+import {Surface} from "./Surface";
 import {Point} from "../entities/Point";
 import {Edge} from "../entities/Edge";
 import {Polygon} from "../entities/Polygon";
 import {Subject} from "../entities/Subject";
 
-Surfaces.prototype.paraboloid = (pointCount = 10, length = 20, color = '#ff0000') => {
+Surface.prototype.paraboloid = (pointCount = 10, length = 20, color = '#ff0000') => {
     const points = [];
     const edges = [];
     const polygons = [];

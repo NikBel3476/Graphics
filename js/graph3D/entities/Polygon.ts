@@ -1,6 +1,14 @@
 import {Point} from "./Point";
 
-export class Polygon{
+export class Polygon {
+    points: Point[];
+    color: { r: number, g: number, b: number };
+    distance: number;
+    lumen: number;
+    visible: boolean;
+    number: number;
+    center: Point;
+
     constructor(points = [], color = '#FF0000', distance = 0, number) {
         this.points = points;
         this.color = this.hexToRgb(color);
