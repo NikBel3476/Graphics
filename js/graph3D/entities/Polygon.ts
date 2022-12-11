@@ -1,14 +1,14 @@
 import {Point} from "./Point";
 
 export class Polygon {
-    points: number[];
+    points: Point[];
     color: { r: number, g: number, b: number };
     distance: number;
     lumen: number;
     visible: boolean;
     center: Point;
 
-    constructor(points: number[] = [], color = '#FF0000', distance = 0) {
+    constructor(points: Point[] = [], color = '#FF0000', distance = 0) {
         this.points = points;
         this.color = this.hexToRgb(color);
         this.distance = distance;
