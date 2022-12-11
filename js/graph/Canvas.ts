@@ -1,6 +1,6 @@
 import {Point} from "../graph3D/entities/Point";
 
-type canvasConstructorParams = {
+type CanvasConstructorParams = {
     id: string;
     width: number;
     height: number;
@@ -27,7 +27,7 @@ export class Canvas {
         height = 300,
         WINDOW = { LEFT: -5, BOTTOM: -5, WIDTH: 20, HEIGHT: 20 },
         callbacks
-    }: canvasConstructorParams) {
+    }: CanvasConstructorParams) {
         if (id) {
             this.canvas = document.getElementById(id) as HTMLCanvasElement;
         } else {

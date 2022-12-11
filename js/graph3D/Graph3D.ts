@@ -1,7 +1,40 @@
 import {Math3D} from "./Math3D";
+import {Point} from "./entities/Point";
+import {Subject} from "./entities/Subject";
+import {Polygon} from "./entities/Polygon";
+import {Light} from "./entities/Light";
+
+type Graph3DConstructorParams = {
+    WINDOW: {
+        LEFT: number,
+        BOTTOM: number,
+        WIDTH: number,
+        HEIGHT: number,
+        P1: Point,
+        P2: Point,
+        P3: Point,
+        CENTER: Point,
+        CAMERA: Point
+    };
+}
 
 export class Graph3D {
-    constructor({ WINDOW }) {
+    WINDOW: {
+        LEFT: number,
+        BOTTOM: number,
+        WIDTH: number,
+        HEIGHT: number,
+        P1: Point,
+        P2: Point,
+        P3: Point,
+        CENTER: Point,
+        CAMERA: Point
+    };
+    math: Math3D;
+    P1P2!: Point;
+    P2P3!: Point;
+
+    constructor({ WINDOW }: Graph3DConstructorParams) {
         this.WINDOW = WINDOW;
         this.math = new Math3D();
     }
@@ -21,40 +54,41 @@ export class Graph3D {
         return (point.y - y0) / (point.z - z0) * (zs - z0) + y0;
     }*/
     // масштабирование точки
-    zoomMatrix(delta) {
+    zoomMatrix(delta: number) {
         this.math.transformMatrix([this.math.zoomMatrix(delta)]);
     }
 
-    moveMatrix(sx, sy, sz) {
+    moveMatrix(sx: number, sy: number, sz: number): void {
         this.math.transformMatrix([this.math.moveMatrix(sx, sy, sz)]);
     }
 
-    rotateOxMatrix(alpha) {
+    rotateOxMatrix(alpha: number): void {
         this.math.transformMatrix([this.math.rotateOxMatrix(alpha)]);
     }
 
-    rotateOyMatrix(alpha) {
+    rotateOyMatrix(alpha: number): void {
         this.math.transformMatrix([this.math.rotateOyMatrix(alpha)]);
     }
 
-    rotateOzMatrix(alpha) {
+    rotateOzMatrix(alpha: number): void {
         this.math.transformMatrix([this.math.rotateOzMatrix(alpha)]);
     }
 
-    animateMatrix(x1, y1, z1, key, alpha, x2, y2, z2) {
+    animateMatrix(x1: number, y1: number, z1: number, key: string, alpha: number, x2: number, y2: number, z2: number): void {
         this.math.transformMatrix([
             this.math.moveMatrix(x1, y1, z1),
+            // @ts-ignore
             this.math[`${key}Matrix`](alpha),
             this.math.moveMatrix(x2, y2, z2)
         ]);
     }
 
-    transform(point) {
+    transform(point: Point): void {
         this.math.transform(point);
     }
 
     // посчитать центры всех полигонов
-    calcCenters(subject) {
+    calcCenters(subject: Subject): void {
         for (let i = 0; i < subject.polygons.length; i++) {
             const polygon = subject.polygons[i];
             const points = polygon.points;
@@ -70,7 +104,7 @@ export class Graph3D {
         }
     }
     // расчет расстояния от полигона до точки
-    calcDistance(subject, endPoint, name) {
+    calcDistance(subject: Subject, endPoint: Point, name: string): void {
         for (let i = 0; i < subject.polygons.length; i++) {
             const polygon = subject.polygons[i];
             if (polygon.visible) {
@@ -84,21 +118,28 @@ export class Graph3D {
                 x /= points.length;
                 y /= points.length;
                 z /= points.length;*/
-                polygon[name] = Math.sqrt(Math.pow(endPoint.x - polygon.center.x, 2) + 
+                // @ts-ignore
+                polygon[name] = Math.sqrt(Math.pow(endPoint.x - polygon.center.x, 2) +
                                           Math.pow(endPoint.y - polygon.center.y, 2) + 
                                           Math.pow(endPoint.z - polygon.center.z, 2));
             }
         }
     }
 
-    calcIllumination(distance, lumen) {
+    calcIllumination(distance: number, lumen: number): number {
         let illum = (distance) ? lumen / (distance * distance) : 1;
         return (illum > 1) ? 1 : illum;
     }
 
-    calcShadow(polygon, subject, SCENE, LIGHT) {
+    calcShadow(
+        polygon: Polygon,
+        subject: Subject,
+        SCENE: Subject[],
+        LIGHT: Light
+    ): { isShadow: boolean, dark: number } | undefined {
         const M1 = polygon.center;
         const s = this.math.calcVector(M1, LIGHT);
+        // FIXME: loop runs 1 time
         for (let i = 0; i < SCENE.length; i++) {
             if (subject.id !== SCENE[i].id) {
                 for (let j = 0; j < SCENE[i].polygons.length; j++) {
@@ -128,6 +169,7 @@ export class Graph3D {
                 }
             }
 
+            // FIXME: maybe move it out from loop body
             return {
                 isShadow: false,
                 dark: 1
@@ -135,7 +177,7 @@ export class Graph3D {
         }
     }
 
-    calcCorner(subject, endPoint) {
+    calcCorner(subject: Subject, endPoint: Point): void {
         const perpendicular = Math.cos(Math.PI / 2);
         const viewVector = this.math.calcVector(endPoint, new Point(0 ,0 ,0));
         for (let i = 0; i < subject.polygons.length; i++) {
@@ -147,11 +189,11 @@ export class Graph3D {
         }
     }
 
-    calcPlaneEquation() {
+    calcPlaneEquation(): void {
         this.math.calcPlaneEquation(this.WINDOW.CAMERA, this.WINDOW.CENTER);
     }
 
-    getProection(point) {
+    getProection(point: Point): Omit<Point, 'z'> {
         const M = this.math.getProection(point);
         const P2M = this.math.calcVector(this.WINDOW.P2, M);
         const cosa = this.math.calcGorner(this.P1P2, M);
