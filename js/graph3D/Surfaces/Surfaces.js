@@ -1,1 +1,1 @@
-class Surfaces {};
+export class Surfaces {}

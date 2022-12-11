@@ -1,3 +1,5 @@
+import {Surfaces} from "./Surfaces";
+
 Surfaces.prototype.sphere = (pointCount = 10, ringCount = 10, R = 10, point = new Point(0, 0 ,0), color = '#FF0000', animation, speedCoef = 1) => {
     let x0 = point.x;
     let y0 = point.y;

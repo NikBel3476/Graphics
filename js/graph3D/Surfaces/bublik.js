@@ -1,3 +1,8 @@
+import {Surfaces} from "./Surfaces";
+import {Point} from "../entities/Point";
+import {Edge} from "../entities/Edge";
+import {Polygon} from "../entities/Polygon";
+
 Surfaces.prototype.bublik = (
     count = 10,
     R = 10,

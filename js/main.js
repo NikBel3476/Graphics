@@ -1,3 +1,10 @@
+import {UI} from "./UI/UI";
+import {Canvas} from "./graph/Canvas";
+import {Point} from "./graph3D/entities/Point";
+import {Surfaces} from "./graph3D/Surfaces/Surfaces";
+import {Graph3D} from "./graph3D/Graph3D";
+import {Light} from "./graph3D/entities/Light";
+
 window.requestAnimFrame = (function () {
     return window.requestAnimationFrame      ||
            window.webkitCancelAnimationFrame ||
@@ -24,7 +31,7 @@ window.onload = function () {
     const ZOOM_OUT = 1.1;
     const ZOOM_IN = 0.9;
 
-    const sur = new Surfaces;
+    const sur = new Surfaces();
     const canvas = new Canvas({id: 'canvas', width: 800, height: 800, WINDOW, callbacks: { wheel, mousemove, mouseup, mousedown}});
     const graph3D = new Graph3D({ WINDOW });
     const ui = new UI({ callbacks: {printPoints, printEdges, printPolygons, move}});

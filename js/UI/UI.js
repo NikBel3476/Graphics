@@ -1,4 +1,4 @@
-class UI {
+export class UI {
     constructor({ callbacks = {} }) {
         // callbacks
         const printPoints = (callbacks.printPoints instanceof Function) ? callbacks.printPoints : function () {};
