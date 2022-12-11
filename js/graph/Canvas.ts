@@ -6,10 +6,10 @@ type CanvasConstructorParams = {
     height: number;
     WINDOW: { LEFT: number, BOTTOM: number, WIDTH: number, HEIGHT: number };
     callbacks: {
-        wheel: (args: any) => void;
-        mousemove: (args: any) => void;
-        mouseup: (args: any) => void;
-        mousedown: (args: any) => void;
+        wheel: (args: any) => any;
+        mousemove: (args: any) => any;
+        mouseup: (args: any) => any;
+        mousedown: (args: any) => any;
     }
 }
 
