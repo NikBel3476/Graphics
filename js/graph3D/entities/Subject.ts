@@ -9,10 +9,16 @@ export class Subject {
     points: Point[];
     edges: Edge[];
     polygons: Polygon[];
-    animation;
+    animation: { [key: string]: Point } | null;
     speedCoef: number;
 
-    constructor(points = [], edges = [], polygons = [], animation = null, speedCoef = 1) {
+    constructor(
+        points: Point[] = [],
+        edges: Edge[] = [],
+        polygons: Polygon[] = [],
+        animation: { [key: string]: Point } | null  = null,
+        speedCoef = 1
+    ) {
         this.id = ++subjectId;
         this.points = points;
         this.edges = edges;

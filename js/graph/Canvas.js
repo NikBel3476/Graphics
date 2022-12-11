@@ -88,7 +88,8 @@ export class Canvas {
         // текст
         this.contextV.fillStyle = '#000000';
         this.contextV.font = '10px Verdana';
-        this.contextV.fillText(`${number}`, this.xsPolygon(points[0].x), this.ysPolygon(points[0].y));
+        // нумерация полигонов
+        // this.contextV.fillText(`${number}`, this.xsPolygon(points[0].x), this.ysPolygon(points[0].y));
     }
 
     render() {

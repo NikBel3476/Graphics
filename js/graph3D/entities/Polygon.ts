@@ -1,26 +1,24 @@
 import {Point} from "./Point";
 
 export class Polygon {
-    points: Point[];
+    points: number[];
     color: { r: number, g: number, b: number };
     distance: number;
     lumen: number;
     visible: boolean;
-    number: number;
     center: Point;
 
-    constructor(points = [], color = '#FF0000', distance = 0, number) {
+    constructor(points: number[] = [], color = '#FF0000', distance = 0) {
         this.points = points;
         this.color = this.hexToRgb(color);
         this.distance = distance;
         this.lumen = 1;
         this.visible = true;
-        this.number = number;
 
-        this.center = new Point; // вычисляемый центр полигона
+        this.center = new Point(); // вычисляемый центр полигона
     }
 
-    hexToRgb(hex) {
+    hexToRgb(hex: string): { r: number, g: number, b: number } {
         const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         return result ? {
         r: parseInt(result[1], 16),
@@ -29,7 +27,7 @@ export class Polygon {
         } : { r: 0, g: 0, b: 0 };
     }
         
-    rgbToHex(r, g, b) {
+    rgbToHex(r: number, g: number, b: number): string {
         return `rgb(${r},${g},${b})`;
         //return "#" + ((r<<16) + (g<<16) + b).toString(16);
     }

@@ -40,7 +40,8 @@ window.onload = () => {
     const SCENE: Array<Subject> = [
         // ЗАЧЕТ
 
-        sur.hyperbolicParaboloid(20, '#ffffff'),
+        sur.circle(80, 10, new Point(0, 0, 0), '#ff0000', '', 1),
+        // sur.hyperbolicParaboloid(20, '#ffffff'),
 
         /*sur.sphere(25, 25, 10, new Point(0, 0, 0), '#fff100'),
         sur.sphere(25, 25, 3, new Point(15, 0, 0), '#05008b', {rotateOz: new Point(0, 0, 0)}, 1),
