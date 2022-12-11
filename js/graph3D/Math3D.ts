@@ -1,4 +1,11 @@
+import {Point} from "./entities/Point";
+
 export class Math3D {
+    matrix: {
+        transform: number[][];
+    };
+    plane: { A: number; B: number; C: number; x0: number; y0: number; z0: number; xs0: number; ys0: number; zs0: number; };
+
     constructor() {
         this.matrix = {
             transform: [[1, 0, 0, 0],
@@ -24,7 +31,7 @@ export class Math3D {
         }
     }
 
-    calcVector(a, b) {
+    calcVector(a: Point, b: Point): Point {
         return {
             x: b.x - a.x,
             y: b.y - a.y,
@@ -32,7 +39,7 @@ export class Math3D {
         }
     }
 
-    vectorProd(a, b) {
+    vectorProd(a: Point, b: Point): Point {
         return {
             x: a.y * b.z - a.z * b.y,
             y: a.z * b.x - a.x * b.z,
@@ -43,7 +50,7 @@ export class Math3D {
     // расчет уравнения плоскости и запись его в структуру
     // point1 - камера 
     // point2 - центр экрана
-    calcPlaneEquation(point1, point2) {
+    calcPlaneEquation(point1: Point, point2: Point): void {
         const vector = this.calcVector(point1, point2);
         // координаты плоскости
         this.plane.A = vector.x;
@@ -59,7 +66,7 @@ export class Math3D {
     }
 
     // получить проекцию точки на плоскость экрана относительно камеры
-    getProection(point) {
+    getProection(point: Point): Point {
         const {A, B, C, x0, y0, z0, xs0, ys0, zs0} = this.plane;
         const m = point.x - xs0;
         const n = point.y - ys0;
@@ -77,22 +84,22 @@ export class Math3D {
         }
     }
 
-    scalProd(a, b) {
-        return a.x*b.x + a.y*b.y + a.z*b.z;
+    scalProd(a: Point, b: Point): number {
+        return a.x * b.x + a.y * b.y + a.z * b.z;
     }
 
-    calcGorner(a, b) {
+    calcGorner(a: Point, b: Point): number {
         return this.scalProd(a, b) / (Math.sqrt(this.scalProd(a, a) * this.scalProd(b, b)));
     }
 
-    calcVectorModule(a) {
+    calcVectorModule(a: Point): number {
         return Math.sqrt(Math.pow(a.x, 2) + Math.pow(a.y, 2) + Math.pow(a.z, 2));
     }
 
     // перемножение матрицы преобразования на точку
     // m = [x, y, z, 1]
     // T = [[],[],[],[]] по 4 элемента
-    multMatrix(T, m) {
+    multMatrix(T: number[][], m: number[]): number[] {
         const c = [0, 0, 0, 0];
         //const rows = T.length;
         //const colomns = m.length;
@@ -106,7 +113,7 @@ export class Math3D {
         return c;
     }
 
-    multMatrixes(A, B) {
+    multMatrixes(A: number[][], B: number[][]): number[][] {
         const C = [[0, 0, 0, 0], 
                    [0, 0, 0, 0], 
                    [0, 0, 0, 0], 
@@ -123,35 +130,35 @@ export class Math3D {
         return C;
     }
 
-    zoomMatrix(delta) {
+    zoomMatrix(delta: number): number[][] {
         return [[delta,  0,  0, 0],
                 [ 0, delta,  0, 0],
                 [ 0,  0, delta, 0],
                 [ 0,  0,     0, 1]];
     }
 
-    moveMatrix(sx, sy, sz) {
+    moveMatrix(sx: number, sy: number, sz: number): number[][] {
         return [[ 1,  0,  0, 0],
                 [ 0,  1,  0, 0],
                 [ 0,  0,  1, 0],
                 [sx, sy, sz, 1]];
     }
 
-    rotateOxMatrix(alpha) {
+    rotateOxMatrix(alpha: number): number[][] {
         return [[1, 0, 0, 0],
                 [0,  Math.cos(alpha), Math.sin(alpha), 0],
                 [0, -Math.sin(alpha), Math.cos(alpha), 0],
                 [0, 0, 0, 1]];
     }
 
-    rotateOyMatrix(alpha) {
+    rotateOyMatrix(alpha: number): number[][] {
         return [[Math.cos(alpha), 0, -Math.sin(alpha), 0],
                 [0, 1, 0, 0],
                 [Math.sin(alpha), 0, Math.cos(alpha), 0],
                 [0, 0, 0, 1]];
 }
 
-    rotateOzMatrix(alpha) {
+    rotateOzMatrix(alpha: number): number[][] {
         return [[ Math.cos(alpha), Math.sin(alpha), 0, 0],
                 [-Math.sin(alpha), Math.cos(alpha), 0, 0],
                 [0, 0, 1, 0],
@@ -159,7 +166,7 @@ export class Math3D {
     }
 
     // заполнить общую матрицу перобразований (на основании массива)
-    transformMatrix(matrixes = []) {
+    transformMatrix(matrixes: number[][][] = []) {
         this.matrix.transform = [[1, 0, 0, 0],
                                  [0, 1, 0, 0],
                                  [0, 0, 1, 0],
@@ -168,7 +175,7 @@ export class Math3D {
     }
 
     // функция преобразований точки относительно матрицы
-    transform(point) {
+    transform(point: Point): void {
         const array = this.multMatrix(this.matrix.transform, [point.x, point.y, point.z, 1]);
         point.x = array[0];
         point.y = array[1];

@@ -1,13 +1,18 @@
-import {Surfaces} from "./Surfaces";
+import {Surface} from "./Surface";
 import {Point} from "../entities/Point";
 import {Edge} from "../entities/Edge";
 import {Polygon} from "../entities/Polygon";
 import {Subject} from "../entities/Subject";
 
-Surfaces.prototype.ellipticCylinder = (pointCount = 20, ringCount = 10, R = 10, color = '#ff0000') => {
-    const points = [];
-    const edges = [];
-    const polygons = [];
+Surface.prototype.ellipticCylinder = (
+    pointCount = 20,
+    ringCount = 10,
+    R = 10,
+    color = '#ff0000'
+) => {
+    const points: Point[] = [];
+    const edges: Edge[] = [];
+    const polygons: Polygon[] = [];
 
     // points
     for (let i = 0; i < ringCount; i++) {

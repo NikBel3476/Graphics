@@ -1,18 +1,46 @@
+import {Point} from "../graph3D/entities/Point";
+
+type CanvasConstructorParams = {
+    id: string;
+    width: number;
+    height: number;
+    WINDOW: { LEFT: number, BOTTOM: number, WIDTH: number, HEIGHT: number };
+    callbacks: {
+        wheel: (args: any) => any;
+        mousemove: (args: any) => any;
+        mouseup: (args: any) => any;
+        mousedown: (args: any) => any;
+    }
+}
+
 export class Canvas {
-    constructor({ id, width = 300, height = 300, WINDOW = { LEFT: -5, BOTTOM: -5, WIDTH: 20, HEIGHT: 20 }, callbacks = {}} = {}) {
+    canvas: HTMLCanvasElement;
+    context: CanvasRenderingContext2D;
+    canvasV: HTMLCanvasElement;
+    contextV: CanvasRenderingContext2D;
+    WINDOW: { LEFT: number, BOTTOM: number, WIDTH: number, HEIGHT: number };
+    PI2: number;
+
+    constructor({
+        id,
+        width = 300,
+        height = 300,
+        WINDOW = { LEFT: -5, BOTTOM: -5, WIDTH: 20, HEIGHT: 20 },
+        callbacks
+    }: CanvasConstructorParams) {
         if (id) {
-            this.canvas = document.getElementById(id);
+            this.canvas = document.getElementById(id) as HTMLCanvasElement;
         } else {
             this.canvas = document.createElement('canvas');
-            document.querySelector('body').appendChild(this.canvas);
+            document.querySelector('body')!.appendChild(this.canvas);
         }
-        this.context = this.canvas.getContext('2d');
+        this.context = this.canvas.getContext('2d')!;
         this.canvas.width  = width;
         this.canvas.height = height;
 
         // виртуальный canvas
         this.canvasV = document.createElement('canvas');
-        this.contextV = this.canvasV.getContext('2d');
+        this.contextV = this.canvasV.getContext('2d')!;
         this.canvasV.width  = width;
         this.canvasV.height = height;
 
@@ -29,22 +57,26 @@ export class Canvas {
         this.canvas.addEventListener('mousedown', mousedown);
     }
 
-    xs(x) {
+    xs(x: number): number {
         return (x - this.WINDOW.LEFT) / this.WINDOW.WIDTH * this.canvas.width;
     }
-    ys(y) {
+
+    ys(y: number): number {
         return this.canvas.height - (y - this.WINDOW.BOTTOM) / this.WINDOW.HEIGHT * this.canvas.height;
     }
-    xsPolygon(x) {
+
+    xsPolygon(x: number): number {
         return x / this.WINDOW.WIDTH * this.canvas.width + this.canvas.width / 2;
     }
-    ysPolygon(y) {
+
+    ysPolygon(y: number): number {
         return this.canvas.height - y / this.WINDOW.HEIGHT * this.canvas.height - this.canvas.height / 2;
     }
-    sx(x) {
+
+    sx(x: number): number {
         return x * this.WINDOW.WIDTH / this.canvas.width + this.WINDOW.LEFT;
     }
-    sy(y) {
+    sy(y: number): number {
         return (this.canvas.height - y) * this.WINDOW.HEIGHT / this.canvas.height + this.WINDOW.BOTTOM;
     }
 
@@ -53,7 +85,7 @@ export class Canvas {
         this.contextV.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    line(x1, y1, x2, y2, color = '#0f0', width = 2) {
+    line(x1: number, y1: number, x2: number, y2: number, color = '#0f0', width = 2) {
         this.contextV.beginPath();
         this.contextV.strokeStyle = color;
         this.contextV.lineWidth = width;
@@ -62,22 +94,22 @@ export class Canvas {
         this.contextV.stroke();
     }
 
-    point(x, y, color = '#f00', size = 2) {
+    point(x: number, y: number, color = '#f00', size = 2) {
         this.contextV.beginPath();
         this.contextV.strokeStyle = color;
         this.contextV.arc(this.xs(x), this.ys(y), size, 0, this.PI2);
         this.contextV.stroke();
     }
 
-    text(x, y, text, font = '15px bond Arial', color = '#000') {
+    text(x: number, y: number, text: string, font = '15px bond Arial', color = '#000') {
         this.contextV.fillStyle = color;
         this.contextV.font = font;
         this.contextV.fillText(text, this.xs(x), this.ys(y));
     }
 
-    polygon(points, color = '008800BB', number) {
+    polygon(points: Point[], color = '008800BB') {
         this.contextV.fillStyle = color;
-        this.contextV.fillStroke = color;
+        this.contextV.strokeStyle = color;
         this.contextV.beginPath();
         this.contextV.moveTo(this.xsPolygon(points[0].x), this.ysPolygon(points[0].y));
         for (let i = 1; i < points.length; i++) {
@@ -88,7 +120,8 @@ export class Canvas {
         // текст
         this.contextV.fillStyle = '#000000';
         this.contextV.font = '10px Verdana';
-        this.contextV.fillText(`${number}`, this.xsPolygon(points[0].x), this.ysPolygon(points[0].y));
+        // нумерация полигонов
+        // this.contextV.fillText(`${number}`, this.xsPolygon(points[0].x), this.ysPolygon(points[0].y));
     }
 
     render() {

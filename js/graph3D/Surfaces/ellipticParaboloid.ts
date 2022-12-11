@@ -1,13 +1,13 @@
-import {Surfaces} from "./Surfaces";
+import {Surface} from "./Surface";
 import {Point} from "../entities/Point";
 import {Edge} from "../entities/Edge";
 import {Polygon} from "../entities/Polygon";
 import {Subject} from "../entities/Subject";
 
-Surfaces.prototype.hyperbolicParaboloid = (count = 20, color = '#ff0000') => {
-    const points = [];
-    const edges = [];
-    const polygons = [];
+Surface.prototype.ellipticParaboloid = (count = 20, color = '#ff0000') => {
+    const points: Point[] = [];
+    const edges: Edge[] = [];
+    const polygons: Polygon[] = [];
 
     // точки
     const size = 10;
@@ -16,7 +16,7 @@ Surfaces.prototype.hyperbolicParaboloid = (count = 20, color = '#ff0000') => {
         for (let j = 0; j < count; j++) {
             const x = i * delta - size / 2;
             const y = j * delta - size / 2;
-            const z = x * x / 2 - y * y / 2;
+            const z = x * x / 2 + y * y / 2;
             points.push(new Point(x, y, z));
         }
     }
@@ -32,7 +32,6 @@ Surfaces.prototype.hyperbolicParaboloid = (count = 20, color = '#ff0000') => {
     //  полигоны
     for (let i = 0; i < points.length; i++) {
         if (i + 1 + count < points.length && (i + 1) % count != 0) {
-            
             polygons.push(new Polygon([i, i + 1, i + 1 + count, i + count], color));
         }
     }

@@ -1,22 +1,29 @@
 import {UI} from "./UI/UI";
 import {Canvas} from "./graph/Canvas";
 import {Point} from "./graph3D/entities/Point";
-import {Surfaces} from "./graph3D/Surfaces/Surfaces";
+import {Surface} from "./graph3D/Surfaces/Surface";
 import {Graph3D} from "./graph3D/Graph3D";
 import {Light} from "./graph3D/entities/Light";
+import {Subject} from "./graph3D/entities/Subject";
+import {Polygon} from "./graph3D/entities/Polygon";
 
+// @ts-ignore
 window.requestAnimFrame = (function () {
     return window.requestAnimationFrame      ||
+            // @ts-ignore
            window.webkitCancelAnimationFrame ||
+            // @ts-ignore
            window.mozRequestAnimationFrame   ||
+            // @ts-ignore
            window.oRequestAnimationFrame     ||
+            // @ts-ignore
            window.msRequestAnimationFrame    ||
-           function (callback) {
+           function (callback: (args: any) => any): void {
                window.setTimeout(callback, 1000 / 60);
            };
 })();
 
-window.onload = function () {
+window.onload = () => {
     const WINDOW = {
         LEFT: -10,
         BOTTOM: -10,
@@ -31,12 +38,12 @@ window.onload = function () {
     const ZOOM_OUT = 1.1;
     const ZOOM_IN = 0.9;
 
-    const sur = new Surfaces();
+    const sur = new Surface();
     const canvas = new Canvas({id: 'canvas', width: 800, height: 800, WINDOW, callbacks: { wheel, mousemove, mouseup, mousedown}});
     const graph3D = new Graph3D({ WINDOW });
     const ui = new UI({ callbacks: {printPoints, printEdges, printPolygons, move}});
     // сцена
-    const SCENE = [
+    const SCENE: Array<Subject> = [
         // ЗАЧЕТ
 
         sur.hyperbolicParaboloid(20, '#ffffff'),
@@ -55,23 +62,25 @@ window.onload = function () {
         sur.bublik(20, 2.5, new Point(-25, 0, 0), '#2d2118', {rotateOz: new Point(0, 0, 0)}, 0.5), // кольцо Юпитера
         sur.sphere(10, 10, 1.2, new Point(-30, 0, 0), '#c6a452', {rotateOz: new Point(0, 0 ,0)}, 0.35),  // Сатурн
         sur.sphere(10, 10, 1.1, new Point(-35, 0, 0), '#0081c6', {rotateOz: new Point(0, 0 ,0)}, 0.2), // Уран
-        sur.sphere(10, 10, 1.1, new Point(-40, 0, 0), '#004e77', {rotateOz: new Point(0, 0 ,0)}, 0.1),  // Нептун */
+        sur.sphere(10, 10, 1.1, new Point(-40, 0, 0), '#004e77', {rotateOz: new Point(0, 0 ,0)}, 0.1),  // Нептун*/
         // фигуры
-        //sur.cone(20, 20, 5),
-        //sur.cube(0, 0, 5),
-        //sur.doublecavityHyperboloid(20), 
-        //sur.ellipsoid(20 ,20, 10), 
+        // sur.circle(80, 10, new Point(0, 0, 0), '#ff0000', '', 1),
+        // sur.cone(20, 20, 5),
+        // sur.cube(0, 0, 5),
+        // sur.doublecavityHyperboloid(20),
+        // sur.ellipsoid(20 ,20, 10),
         //sur.ellipticCylinder(20, 20, 10), 
         //sur.ellipticParaboloid(20),
         //sur.hyperbolicCylinder(20),
         //sur.hyperbolicParaboloid(20),
         //sur.parabolicCylinder(20), 
-        //sur.paraboloid(10, 20),
+        // sur.paraboloid(10, 20),
         //sur.singlecavityHyperboloid(20, 10, 10),
+        // sur.sphere(25, 25, 10, new Point(0, 0, 0), '#fff100'),
     ];
     const LIGHT = new Light(10, -20, -40, 10000); // источник света
 
-    let canRotate = 0;
+    let canRotate: boolean = false;
     let canPrint = {
         points: false,
         edges: false,
@@ -79,18 +88,18 @@ window.onload = function () {
     };
 
     // inputs
-    function printPoints(value) {
+    function printPoints(value: boolean): void {
         canPrint.points = value;
     }
-    function printEdges(value) {
+    function printEdges(value: boolean): void {
         canPrint.edges = value;
     }
-    function printPolygons(value) {
+    function printPolygons(value: boolean): void {
         canPrint.polygons = value;
     }
 
     // callbacks
-    function wheel(event) {
+    function wheel(event: WheelEvent): void {
         /*const delta = (event.wheelDelta > 0) ? ZOOM_IN : ZOOM_OUT;
         graph3D.zoomMatrix(delta);
         SCENE.forEach(subject => {
@@ -103,7 +112,7 @@ window.onload = function () {
                 }
             }
         });*/
-        const delta = (event.wheelDelta > 0) ? ZOOM_OUT : ZOOM_IN;
+        const delta = (event.deltaY < 0) ? ZOOM_OUT : ZOOM_IN;
         graph3D.zoomMatrix(delta);
         SCENE.forEach(subject => {
             subject.points.forEach(point => graph3D.transform(point));
@@ -115,15 +124,15 @@ window.onload = function () {
         });
     }
 
-    function mouseup(){
+    function mouseup(): void {
         canRotate = false;
     }
 
-    function mousedown(){
+    function mousedown(): void {
         canRotate = true;
     }
 
-    function mousemove(event) {
+    function mousemove(event: MouseEvent): void {
         if (canRotate) {
             if (event.movementX) { // вращение вокруг Oy
                 const alpha = canvas.sx(event.movementX) / WINDOW.CAMERA.z / 20 * Math.sign(event.movementX);
@@ -152,7 +161,7 @@ window.onload = function () {
         }
     }
 
-    function move(direction) {
+    function move(direction: 'up' | 'down' | 'left' | 'right'): void {
         switch(direction) {
             case 'up': graph3D.rotateOxMatrix(Math.PI / 180); break;
             case 'down': graph3D.rotateOxMatrix(-Math.PI / 180); break;
@@ -169,7 +178,7 @@ window.onload = function () {
     // about render
     function printAllPolygons() {
         if (canPrint.polygons) {
-            const polygons = [];
+            const polygons: Polygon[] = [];
             // предварительные расчеты
             SCENE.forEach(subject => {
                 //graph3D.calcCorner(subject, WINDOW.CAMERA); // определяем какие полигоны видимы
@@ -182,18 +191,25 @@ window.onload = function () {
                 for (let i = 0; i < subject.polygons.length; i++) {
                     if (subject.polygons[i].visible) {
                         const polygon = subject.polygons[i];
+                        // @ts-ignore
                         const point1 = graph3D.getProection(subject.points[polygon.points[0]]);
+                        // @ts-ignore
                         const point2 = graph3D.getProection(subject.points[polygon.points[1]]);
+                        // @ts-ignore
                         const point3 = graph3D.getProection(subject.points[polygon.points[2]]);
+                        // @ts-ignore
                         const point4 = graph3D.getProection(subject.points[polygon.points[3]]);
                         let {r, g, b} = polygon.color;
+                        // @ts-ignore
                         const { isShadow, dark} = graph3D.calcShadow(polygon, subject, SCENE, LIGHT);
                         const lumen = (isShadow) ? dark : graph3D.calcIllumination(polygon.lumen, LIGHT.lumen);
                         r = Math.round(r * lumen);
                         g = Math.round(g * lumen);
                         b = Math.round(b * lumen);
                         polygons.push({
+                            // @ts-ignore
                             points: [point1, point2, point3, point4],
+                            // @ts-ignore
                             color: polygon.rgbToHex(r, g, b),
                             distance: polygon.distance
                         });
@@ -203,11 +219,12 @@ window.onload = function () {
             // отрисовка всех полигонов
             polygons.sort((a, b) => b.distance - a.distance); // сортировка полиговнов
             let number = 1;
-            polygons.forEach(polygon => {canvas.polygon(polygon.points, polygon.color, number++)});
+            // @ts-ignore
+            polygons.forEach(polygon => {canvas.polygon(polygon.points, polygon.color/*, number++*/)});
         }
     }
     
-    function printSubject(subject) {
+    function printSubject(subject: Subject): void {
         // print edges
         if (canPrint.edges) {
             /*for (let i = 0; i < subject.edges.length; i++) {
@@ -236,16 +253,16 @@ window.onload = function () {
         }
     }
 
-    function render() {
+    function render(): void {
         canvas.clear();
         printAllPolygons();
         SCENE.forEach(subject => printSubject(subject));
-        canvas.text(-7, 7, FPSout);
+        canvas.text(-7, 7, String(FPSout));
         canvas.text(-10, 10, 'aaa');
         canvas.render();
     }
 
-    function animation() {
+    function animation(): void {
         // анимация вращения
         SCENE.forEach(subject => {
             if (subject.animation) {
@@ -291,6 +308,7 @@ window.onload = function () {
         graph3D.calcWindowVectors(); // вычислить векторы экрана
         // отрисовка сцены
         render();
-        requestAnimFrame(animloop);
+        // @ts-ignore
+        window.requestAnimFrame(animloop);
     })();
 }; 

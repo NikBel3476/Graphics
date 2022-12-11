@@ -1,16 +1,21 @@
-import {Surfaces} from "./Surfaces";
+import {Surface} from "./Surface";
 import {Point} from "../entities/Point";
 import {Edge} from "../entities/Edge";
 import {Polygon} from "../entities/Polygon";
+import {Subject} from "../entities/Subject";
 
-Surfaces.prototype.doublecavityHyperboloid = (count = 20, point = new Point(0, 0, 0), color = 'ff0000') => {
-    const points = [];
-    const edges = [];
-    const polygons = [];
+Surface.prototype.doublecavityHyperboloid = (
+    count = 20,
+    point = new Point(0, 0, 0),
+    color = 'ff0000'
+) => {
+    const points: Point[] = [];
+    const edges: Edge[] = [];
+    const polygons: Polygon[] = [];
 
     //расставить точки
     const delta = Math.PI * 2 / count;
-    function makePoints(a, b) {
+    function makePoints(a: number, b: number) {
         for (let i = 0; i <= Math.PI; i += delta) {
             for (let j = 0; j < Math.PI * 2; j += delta) {
                 const x = a * point.x + 4 * i * Math.cos(j);

@@ -1,27 +1,30 @@
-import {Surfaces} from "./Surfaces";
+import {Surface} from "./Surface";
 import {Point} from "../entities/Point";
 import {Edge} from "../entities/Edge";
 import {Polygon} from "../entities/Polygon";
+import {Subject} from "../entities/Subject";
 
-Surfaces.prototype.bublik = (
+Surface.prototype.circle = (
     count = 10,
     R = 10,
-    point = new Point(0, 0, 0), color = '#ff0000', animation, speedCoef = 1
+    point = new Point(0, 0, 0),
+    color = '#ff0000',
+    animation: { [key: string]: Point } | null,
+    speedCoef = 1
 ) => {
     const x0 = point.x;
     const y0 = point.y;
     const z0 = point.z;
-    const points = [];
-    const edges = [];
-    const polygons = [];
+    const points: Point[] = [];
+    const edges: Edge[] = [];
+    const polygons: Polygon[] = [];
 
-    function setRoundOfPoints(count, R) {
+    function setRoundOfPoints(count: number, R: number) {
         const da = 2 * Math.PI / count;
         for (let i = 0; i < 2 * Math.PI; i += da) {
             const x = R * Math.sin(i) + x0;
             const z = R * Math.cos(i) + z0;
-            const y = y0;
-            points.push(new Point(x, y, z));
+            points.push(new Point(x, y0, z));
         }
     }
 

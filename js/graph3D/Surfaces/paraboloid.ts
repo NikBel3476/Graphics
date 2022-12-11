@@ -1,26 +1,26 @@
-import {Surfaces} from "./Surfaces";
+import {Surface} from "./Surface";
 import {Point} from "../entities/Point";
 import {Edge} from "../entities/Edge";
 import {Polygon} from "../entities/Polygon";
 import {Subject} from "../entities/Subject";
 
-Surfaces.prototype.paraboloid = (pointCount = 10, length = 20, color = '#ff0000') => {
-    const points = [];
-    const edges = [];
-    const polygons = [];
+Surface.prototype.paraboloid = (pointCount = 10, length = 20, color = '#ff0000') => {
+    const points: Point[] = [];
+    const edges: Edge[] = [];
+    const polygons: Polygon[] = [];
     const a = 2;
     const b = 2;
     const delta = length / pointCount;
 
-    x = -length / 2 - delta;
+    let x = -length / 2 - delta;
 
     // points
     for (let i = 0; i <= pointCount; i++) {
         x += delta;
-        z = -length / 2 - delta;
+        let z = -length / 2 - delta;
         for (let j = 0; j <= pointCount; j++) {
             z += delta;
-            y = (-z * z + Math.abs(x * x / (a * a))) / (b * b);
+            let y = (-z * z + Math.abs(x * x / (a * a))) / (b * b);
             points.push(new Point(x, y, z));
         }
     }
