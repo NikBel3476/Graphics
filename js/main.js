@@ -31,7 +31,7 @@ window.onload = function () {
     const ZOOM_OUT = 1.1;
     const ZOOM_IN = 0.9;
 
-    const sur = new Surfaces;
+    const sur = new Surfaces();
     const canvas = new Canvas({id: 'canvas', width: 800, height: 800, WINDOW, callbacks: { wheel, mousemove, mouseup, mousedown}});
     const graph3D = new Graph3D({ WINDOW });
     const ui = new UI({ callbacks: {printPoints, printEdges, printPolygons, move}});
